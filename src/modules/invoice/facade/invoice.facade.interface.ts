@@ -1,7 +1,7 @@
 export interface FindInvoiceFacadeInputDTO {
     id: string;
 }
-
+  
 export interface FindInvoiceFacadeOutputDTO {
     id: string;
     name: string;
@@ -21,7 +21,7 @@ export interface FindInvoiceFacadeOutputDTO {
     }[];
     total: number;
     createdAt: Date;
-}
+}  
 
 export interface GenerateInvoiceFacadeInputDto {
     name: string;
@@ -38,7 +38,7 @@ export interface GenerateInvoiceFacadeInputDto {
         price: number;
     }[];
 }
-
+  
 export interface GenerateInvoiceFacadeOutputDto {
     id: string;
     name: string;

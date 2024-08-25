@@ -1,45 +1,53 @@
-import { Column, Model, PrimaryKey, Table, HasMany, DataType } from 'sequelize-typescript';
-import { InvoiceItemModel } from './invoice.item.model';
+import { Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
+
+interface Item {
+    id: string;
+    name: string;
+    price: number;
+}
 
 @Table({
-    tableName: 'invoices',
+    tableName: "invoices",
     timestamps: false,
 })
-export class InvoiceModel extends Model {
+export default class InvoiceModel extends Model {
     @PrimaryKey
     @Column({ allowNull: false })
-    id: string;
+    declare id: string;
+    
+    @Column({ allowNull: false })
+    declare name: string;
 
     @Column({ allowNull: false })
-    name: string;
+    declare document: string;
 
     @Column({ allowNull: false })
-    document: string;
+    declare street: string;
 
     @Column({ allowNull: false })
-    street: string
+    declare number: string;
 
     @Column({ allowNull: false })
-    number: string
+    declare complement: string;
+
+    @Column({ allowNull: false })
+    declare city: string;
+
+    @Column({ allowNull: false })
+    declare state: string;
+
+    @Column({ allowNull: false })
+    declare zipCode: string;
+
+    @Column({ allowNull: false, type: DataType.JSON })
+    declare items: Item[];
 
     @Column({ allowNull: true })
-    complement: string
+    declare total?: number;
 
-    @Column({ allowNull: false })
-    city: string
+    @Column({ allowNull: true })
+    declare createdAt?: Date;
 
-    @Column({ allowNull: false })
-    state: string
-
-    @Column({ allowNull: false })
-    zipcode: string
-
-    @Column({ allowNull: false })
-    createdAt: Date;
-
-    @Column({ allowNull: false })
-    updatedAt: Date;
-
-    @HasMany(() => InvoiceItemModel)
-    items: InvoiceItemModel[];
+    @Column({ allowNull: true })
+    declare updatedAt?: Date;
 }

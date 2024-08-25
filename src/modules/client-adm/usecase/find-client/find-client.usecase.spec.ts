@@ -1,50 +1,49 @@
-import Address from "../../../@shared/domain/value-object/address"
-import Id from "../../../@shared/domain/value-object/id.value-object"
-import Client from "../../domain/client.entity"
-import FindClientUseCase from "./find-client.usecase"
+import Address from "../../../@shared/domain/value-object/address.value-object";
+import Id from "../../../@shared/domain/value-object/id.value-object";
+import Client from "../../domain/client.entity";
+import FindClientUseCase from "./find-client.usecase";
 
 const client = new Client({
-  id: new Id("1"),
-  name: "Lucian",
-  email: "lucian@123.com",
-  document: "1234-5678",
-  address: new Address(
-    "Rua 123",
-    "99",
-    "Casa Verde",
-    "Criciúma",
-    "SC",
-    "88888-888",
-  )
-})
+    id: new Id("1"),
+    name: "Client 1",
+    email: "x@x.com",
+    document: "Document Client 1",
+    address: new Address(
+        "Street 1",
+        "123",
+        "Complement 1",
+        "City 1",
+        "State 1",
+        "ZipCode 1",
+    ),
+});
 
 const MockRepository = () => {
+    return {
+        add: jest.fn(),
+        find: jest.fn().mockReturnValue(Promise.resolve(client)),
+    };
+};
 
-  return {
-    add: jest.fn(),
-    find: jest.fn().mockReturnValue(Promise.resolve(client))
-  }
-}
+describe("Find Client Usecase unit test", () => {
+    it("should find a client", async () => {
+        const repository = MockRepository();
+        const usecase = new FindClientUseCase(repository);
 
-describe("Find Client use case unit test", () => {
+        const input = {
+            id: "1",          
+        };
 
-  it("should find a client", async () => {
+        const result = await usecase.execute(input);
 
-    const repository = MockRepository()
-    const usecase = new FindClientUseCase(repository)
+        expect(repository.find).toHaveBeenCalled();
+        expect(result.id).toEqual(input.id);
+        expect(result.name).toEqual(client.name);
+        expect(result.email).toEqual(client.email);
+        expect(result.document).toEqual(client.document);
+        expect(result.address.state).toEqual(client.address.state);
+        expect(result.createdAt).toEqual(client.createdAt);
+        expect(result.updatedAt).toEqual(client.updatedAt);
+    });
 
-    const input = {
-      id: "1"
-    }
-
-    const result = await usecase.execute(input)
-
-    expect(repository.find).toHaveBeenCalled()
-    expect(result.id).toEqual(input.id)
-    expect(result.name).toEqual(client.name)
-    expect(result.email).toEqual(client.email)
-    expect(result.address).toEqual(client.address)
-    expect(result.createdAt).toEqual(client.createdAt)
-    expect(result.updatedAt).toEqual(client.updatedAt)
-  })
-})
+});

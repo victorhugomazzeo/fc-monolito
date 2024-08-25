@@ -1,40 +1,45 @@
 import AggregateRoot from "../../@shared/domain/entity/aggregate-root.interface";
 import BaseEntity from "../../@shared/domain/entity/base.entity";
+import Address from "../../@shared/domain/value-object/address.value-object";
 import Id from "../../@shared/domain/value-object/id.value-object";
-import { InvoiceItem } from "./invoice-item";
-
+import InvoiceItems from "./invoice-Item.entity";
 
 type InvoiceProps = {
-    id?: Id;
+    id?: InvoiceId;
     name: string;
     document: string;
     address: Address;
-    items: InvoiceItem[];
+    items: InvoiceItems[];
+    total?: number;
     createdAt?: Date;
     updatedAt?: Date;
 };
 
-type Address = {
-    street: string;
-    number: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    complement: string;
-};
+export class InvoiceId extends Id {
+    constructor(id: string) {
+        super(id);
+    }
+}
 
-export class Invoice extends BaseEntity implements AggregateRoot {
+export default class Invoice extends BaseEntity implements AggregateRoot {
     private _name: string;
     private _document: string;
     private _address: Address;
-    private _items: InvoiceItem[];
+    private _items: InvoiceItems[];
 
     constructor(props: InvoiceProps) {
         super(props.id);
         this._name = props.name;
         this._document = props.document;
         this._address = props.address;
-        this._items = props.items || [];
+        this._items = props.items; 
+        this.validate();       
+    }
+
+    validate(): void {
+        if (this._items.length <= 0) {
+            throw new Error("Has to be at least one item");
+        }
     }
 
     get name(): string {
@@ -49,26 +54,14 @@ export class Invoice extends BaseEntity implements AggregateRoot {
         return this._address;
     }
 
-    get items(): InvoiceItem[] {
+    get items(): InvoiceItems[] {
         return this._items;
     }
 
-    set name(name: string) {
-        this._name = name;
+    get total(): number {
+        return this._items.reduce((acc, item) => acc + item.price, 0);
     }
-
-    set document(document: string) {
-        this._document = document;
-    }
-
-    set address(address: Address) {
-        this._address = address;
-    }
-
-
-    addItem(item: InvoiceItem) {
-        this._items.push(item);
-    }
-
-
+    
 }
+
+

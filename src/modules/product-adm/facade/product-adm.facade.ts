@@ -1,31 +1,27 @@
 import UseCaseInterface from "../../@shared/usecase/use-case.interface";
-import ProductAdmFacadeInterface, {
-  AddProductFacadeInputDto,
-  CheckStockFacadeInputDto,
-  CheckStockFacadeOutputDto,
-} from "./product-adm.facade.interface";
+import ProductAdmFacadeInterface, { AddProductFacadeInputDto, checkStockFacadeInputDto, checkStockFacadeOutputDto } from "./product-adm.facade.interface";
 
 export interface UseCasesProps {
-  addUseCase: UseCaseInterface;
-  stockUseCase: UseCaseInterface;
+    addUseCase: UseCaseInterface;
+    stockUseCase: UseCaseInterface;
 }
 
 export default class ProductAdmFacade implements ProductAdmFacadeInterface {
-  private _addUsecase: UseCaseInterface;
-  private _checkStockUsecase: UseCaseInterface;
+    private _addUsecase: UseCaseInterface;
+    private _checkStockUsecase: UseCaseInterface;
 
-  constructor(usecasesProps: UseCasesProps) {
-    this._addUsecase = usecasesProps.addUseCase;
-    this._checkStockUsecase = usecasesProps.stockUseCase;
-  }
+    constructor(usecaseProps: UseCasesProps) {
+        this._addUsecase = usecaseProps.addUseCase;
+        this._checkStockUsecase = usecaseProps.stockUseCase;
+    }
 
-  addProduct(input: AddProductFacadeInputDto): Promise<void> {
-    // caso o dto do caso de uso for != do dto da facade, converter o dto da facade para o dto do caso de uso
-    return this._addUsecase.execute(input);
-  }
-  checkStock(
-    input: CheckStockFacadeInputDto
-  ): Promise<CheckStockFacadeOutputDto> {
-    return this._checkStockUsecase.execute(input);
-  }
+    addProduct(input: AddProductFacadeInputDto): Promise<void> {
+        // Pelo Dto de addProduct ser igual ao Dto do caso de uso, então pode-se apenas retornar o execute.
+        // Caso o Dto do caso de uso for != do Dto da Facade, será necessário converter o Dto para o Dto do caso de uso.
+        return this._addUsecase.execute(input);
+    }
+
+    checkStock(input: checkStockFacadeInputDto): Promise<checkStockFacadeOutputDto> {
+        return this._checkStockUsecase.execute(input);
+    }
 }
